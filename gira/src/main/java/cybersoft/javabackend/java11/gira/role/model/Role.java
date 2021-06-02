@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 /* Generate getters/setters by Lombok */
@@ -27,8 +29,9 @@ public class Role {
 	private String roleName;
 	private String description;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-	private Set<Account> account;
+	private Set<Account> accounts;
 	
 	public Long getId() {
 		return id;
@@ -48,9 +51,15 @@ public class Role {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+	public Set<Account> getAccounts() {
+		return accounts;
+	}
+	public void setAccounts(Set<Account> accounts) {
+		this.accounts = accounts;
+	}
 	@Override
-		public String toString() {
-			return String.format("ROLE: %d %s %s", id, roleName, description);
-		}
+	public String toString() {
+		return String.format("ROLE: %d %s %s\n", id, roleName, description);
+	}
+	
 }

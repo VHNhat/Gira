@@ -1,8 +1,12 @@
 package cybersoft.javabackend.java11.gira.role.service;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cybersoft.javabackend.java11.gira.role.dto.RoleWithAccountsDTO;
 import cybersoft.javabackend.java11.gira.role.model.Role;
 import cybersoft.javabackend.java11.gira.role.repository.RoleRepository;
 
@@ -16,5 +20,50 @@ public class RoleServiceImpl implements RoleService {
 		_repository.save(role);
 	}
 	
+	@Override
+	public List<Role> findAll(){
+		return _repository.findAll();
+	}
+
+	@Override
+	public List<Role> findByRoleName(String roleName) {
+		return _repository.findByRoleName(roleName);
+	}
+
+	@Override
+	public List<Role> findByDescription(String description) {
+		return _repository.findByDescriptionContainingOrderByIdAsc(description);
+	}
+
+	@Override
+	public List<RoleWithAccountsDTO> findRoleWithAccountInfo() {
+		List<Role> roles = _repository.findAll();
+		List<RoleWithAccountsDTO> results = mapRoleToRoleWithAccountsDTO(roles);
+		System.out.println("Hold this line to debug!!!!");
+		return results;
+	}
 	
+	public List<RoleWithAccountsDTO> mapRoleToRoleWithAccountsDTO(List<Role> roles){
+		List<RoleWithAccountsDTO> results = new LinkedList<RoleWithAccountsDTO>();
+		
+		for (Role role : roles) {
+			RoleWithAccountsDTO dto = new RoleWithAccountsDTO();
+			mapRoleToDto(dto, role);
+			results.add(dto);
+		}
+		
+		return results;
+	}
+	
+	public void mapRoleToDto(RoleWithAccountsDTO dto, Role role) {
+		dto.setId(role.getId());
+		dto.setRoleName(role.getRoleName());
+		dto.setDescription(role.getDescription());
+		dto.setAccount(role.getAccounts());
+	}
+
+	/*@Override
+	public List<Role> findRoleWithoutBlankDescription(String roleName) {
+		return _repository.findRoleWithNotNullDescription(roleName);
+	}*/
 }
