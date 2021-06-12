@@ -8,23 +8,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import cybersoft.javabackend.java11.gira.commondata.model.ResponseObject;
 import cybersoft.javabackend.java11.gira.role.dto.CreateRoleDto;
 import cybersoft.javabackend.java11.gira.role.dto.RoleWithAccountsDTO;
 import cybersoft.javabackend.java11.gira.role.model.Role;
 import cybersoft.javabackend.java11.gira.role.service.RoleService;
+import cybersoft.javabackend.java11.gira.util.ErrorUtils;
 
 @RestController
 @RequestMapping("/api/role")
 public class RoleController {
-	
 	@Autowired
 	private RoleService _service;
 	
@@ -33,7 +37,7 @@ public class RoleController {
 		List<Role> roles = _service.findAll();
 		
 		if(roles == null)
-			return new ResponseEntity<>(roles, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		
 		return new ResponseEntity<>(roles, HttpStatus.OK);
 	}
@@ -42,8 +46,28 @@ public class RoleController {
 	public ResponseEntity<Object> findByRoleName(@PathVariable("role-name") String roleName){
 		List<Role> roles = _service.findByRoleName(roleName);
 		
-		if(roles == null)
-			return new ResponseEntity<>(roles, HttpStatus.NO_CONTENT);
+		if(roles.isEmpty())
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		
+		return new ResponseEntity<>(roles, HttpStatus.OK);
+	}
+	
+	@GetMapping("/description/{role-name}")
+	public ResponseEntity<Object> findRoleWithoutBlankDescription(@PathVariable("role-name") String roleName){
+		List<Role> roles = _service.findRoleWithoutBlankDescription(roleName);
+		
+		if(roles.isEmpty())
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		
+		return new ResponseEntity<>(roles, HttpStatus.OK);
+	}
+	
+	@GetMapping("/with-account")
+	public ResponseEntity<List<RoleWithAccountsDTO>> findRoleWithAccountInfo(){
+		List<RoleWithAccountsDTO> roles = _service.findRoleWithAccountInfo();
+		
+		if(roles.isEmpty())
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		
 		return new ResponseEntity<>(roles, HttpStatus.OK);
 	}
@@ -52,40 +76,55 @@ public class RoleController {
 	public ResponseEntity<Object> findByDescription(@RequestParam("description") String description){
 		List<Role> roles = _service.findByDescription(description);
 		
-		if(roles == null)
-			return new ResponseEntity<>(roles, HttpStatus.NO_CONTENT);
+		if(roles.isEmpty())
+			return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
 		
-		return new ResponseEntity<>(roles, HttpStatus.OK);
+		return new ResponseEntity<Object>(roles, HttpStatus.OK);
 	}
-	
-	/*@GetMapping("/description/{role-name}")
-	public ResponseEntity<Object> findRoleWithoutBlankDescription(@PathVariable("role-name") String roleName){
-		List<Role> roles = _service.findRoleWithoutBlankDescription(roleName);
-		if(roles == null)
-			return new ResponseEntity<>(roles, HttpStatus.NO_CONTENT);
-		return new ResponseEntity<>(roles, HttpStatus.OK);
-	}*/
-	
-	@GetMapping("/with-account")
-	public ResponseEntity<List<RoleWithAccountsDTO>> findRoleWithAccountInfo(){
-		List<RoleWithAccountsDTO> roles = _service.findRoleWithAccountInfo();
-		if(roles == null)
-			return new ResponseEntity<>(roles, HttpStatus.NO_CONTENT);
-		
-		return new ResponseEntity<>(roles, HttpStatus.OK);
-	}
-	
+
 	@PostMapping("")
 	public ResponseEntity<Object> save(@Valid @RequestBody CreateRoleDto dto, BindingResult errors){
 		if(errors.hasErrors())
-			return new ResponseEntity<>(errors.getAllErrors(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(
+					new ResponseObject(ErrorUtils.getErrorMessages(errors.getAllErrors())),
+					HttpStatus.BAD_REQUEST);
 		
 		Role role = new Role()
-							  .roleName(dto.roleName)
-							  .descriptionn(dto.description);
+							.roleName(dto.roleName)
+							.description(dto.description);
 		
-		System.out.println(role.toString());
 		_service.save(role);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
+	
+	@PutMapping("/{role-id}")
+	public ResponseEntity<Object> updateRoleInfo(
+			@Valid @RequestBody CreateRoleDto dto,
+			@PathVariable("role-id") Long roleId,
+			BindingResult errors){
+		if(errors.hasErrors())
+			return new ResponseEntity<>(
+					new ResponseObject(ErrorUtils.getErrorMessages(errors.getAllErrors())),
+					HttpStatus.BAD_REQUEST);
+		
+		Role updatedRole = _service.updateRoleInfo(dto, roleId);
+		
+		return new ResponseEntity<>(
+				new ResponseObject(updatedRole), HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/{role-id}")
+	public ResponseEntity<Object> deleteRoleById(@PathVariable("role-id")Long roleId){
+		if(roleId == null)
+			return new ResponseEntity<>(
+			new ResponseObject(ErrorUtils.errorOf("Role id is null")),
+			HttpStatus.BAD_REQUEST);
+		
+		_service.deleteById(roleId);
+		return new ResponseEntity<>(
+				new ResponseObject("Role has been deleted."),
+				HttpStatus.OK
+				);
+	}
+	
 }

@@ -1,16 +1,18 @@
 package cybersoft.javabackend.java11.gira.role.dto;
 
 import javax.validation.constraints.NotBlank;
-
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Size;
 
 public class CreateRoleDto {
-	@NotBlank(message = "Role name can't be blank.")
-	@Length(min = 4, max = 50, message = "Role name length is between {0} and {1}.")
+	@NotBlank(message = "{role.name.notblank}")
+	@Size(min = 4, max = 50, message = "{role.name.size}")
 	public String roleName;
 	
-	@NotBlank(message = "Role description can't be blank.")
+	@NotBlank(message = "{role.description.notblank}")
 	public String description;
-
-
+	/*
+	 * @NotNull -> chỉ check null, không check rỗng
+	 * @NotEmpty -> chỉ check rỗng, không check space-trim
+	 * @NotBlank -> trim hết space đầu đuôi rồi mới check rỗng
+	 */
 }

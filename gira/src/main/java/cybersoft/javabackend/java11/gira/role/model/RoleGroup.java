@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
 
-import cybersoft.javabackend.java11.gira.commondata.AbstractEntity;
+import cybersoft.javabackend.java11.gira.commondata.model.AbstractEntity;
 
 @Entity
 @Table(name = "role_group")
