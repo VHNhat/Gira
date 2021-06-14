@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
 import cybersoft.javabackend.java11.gira.util.ErrorUtils;
 import cybersoft.javabackend.java11.gira.util.ListUtils;
@@ -19,6 +20,15 @@ public class ResponseHandler {
 		map.put("status", status.value());
 		
 		return new ResponseEntity<>(map,status);
+	}
+	
+	public static ResponseEntity<Object> getResponse(BindingResult bindingResult, HttpStatus status){
+		Map<String, Object> map = new HashMap<>();
+		map.put("content", ListUtils.emptyStringList);
+		map.put("message", ErrorUtils.getErrorMessages(bindingResult));
+		map.put("status", status.value());
+		
+		return new ResponseEntity<>(map, status);
 	}
 	
 	public static ResponseEntity<Object> getResponse(String error, HttpStatus status){
