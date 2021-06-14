@@ -1,12 +1,11 @@
 package cybersoft.javabackend.java11.gira.user.dto;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.sun.istack.NotNull;
+
 
 import cybersoft.javabackend.java11.gira.user.util.UserStatus;
 import cybersoft.javabackend.java11.gira.user.validation.annotation.UniqueUsername;
@@ -40,7 +39,6 @@ public class CreateUserDto {
 	private String displayName;
 	
 	@NotNull
-	@Enumerated(EnumType.STRING)
 	private UserStatus status;
 
 	public String getUsername() {
