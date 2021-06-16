@@ -2,18 +2,24 @@ package cybersoft.javabackend.java11.gira.user.model;
 
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 import cybersoft.javabackend.java11.gira.commondata.model.AbstractEntity;
+import cybersoft.javabackend.java11.gira.role.model.RoleGroup;
 import cybersoft.javabackend.java11.gira.user.util.UserStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,6 +58,10 @@ public class User extends AbstractEntity {
 	private String job;
 	private String department;
 	private String hobbies;
+	
+	@ManyToMany(mappedBy = "users")
+	@JsonIgnore
+	private Set<RoleGroup> roleGroups = new HashSet<>();
 	
 	public User username(String username) {
 		this.username = username;
