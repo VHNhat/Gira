@@ -1,6 +1,7 @@
 package cybersoft.javabackend.java11.gira.user.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import cybersoft.javabackend.java11.gira.commondata.GenericServiceImpl;
@@ -12,15 +13,19 @@ import cybersoft.javabackend.java11.gira.user.repository.UserRepository;
 public class UserServiceImpl extends GenericServiceImpl<User, Long> implements UserService {
 	@Autowired
 	private UserRepository _repository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	@Override
 	public User save(CreateUserDto dto) {
 		User user = new User();
 		user.username(dto.getUsername())
-			.password(dto.getPassword())
+			.password(passwordEncoder.encode(dto.getPassword()))
 			.email(dto.getEmail())
 			.fullName(dto.getFullname())
 			.displayName(dto.getDisplayName())
 			.status(dto.getStatus());
+			
 		
 		return _repository.save(user);
 	}
