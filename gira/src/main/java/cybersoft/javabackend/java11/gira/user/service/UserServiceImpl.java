@@ -34,5 +34,10 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
 		
 		return _repository.countByUsername(username) >= 1;
 	}
+	
+	@Override
+	public boolean isTakenEmail(String email) {
+		return _repository.countByEmail(email) >= 1;
+	}
 
 }

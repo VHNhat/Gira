@@ -11,3 +11,7 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: update
+gira:
+  app:
+    jwt-secret: cybersoftgiraapplication
+    jwt-duration: 86400000

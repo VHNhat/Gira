@@ -8,12 +8,15 @@ import javax.validation.constraints.Size;
 
 
 import cybersoft.javabackend.java11.gira.user.util.UserStatus;
+import cybersoft.javabackend.java11.gira.user.validation.annotation.ConfirmPassword;
+import cybersoft.javabackend.java11.gira.user.validation.annotation.UniqueEmail;
 import cybersoft.javabackend.java11.gira.user.validation.annotation.UniqueUsername;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@ConfirmPassword(message = "{user.confirm-password}")
 public class CreateUserDto {
 
 	@NotBlank(message = "{user.username.not-blank}")
@@ -30,6 +33,7 @@ public class CreateUserDto {
 	
 	@NotBlank
 	@Email
+	@UniqueEmail
 	private String email;
 	
 	@NotBlank
