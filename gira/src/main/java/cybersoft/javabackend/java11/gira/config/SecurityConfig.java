@@ -46,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/api/**").permitAll()
 			.antMatchers("/role/**").permitAll()
 			.antMatchers("/user/**").permitAll()
+			.antMatchers("/login").permitAll()
 			.anyRequest().authenticated();
 		
 		// make server stateless

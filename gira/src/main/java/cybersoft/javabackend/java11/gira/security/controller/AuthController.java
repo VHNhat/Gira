@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import cybersoft.javabackend.java11.gira.commondata.model.ResponseHandler;
+import cybersoft.javabackend.java11.gira.security.dto.JwtDto;
 import cybersoft.javabackend.java11.gira.security.dto.LoginDto;
 import cybersoft.javabackend.java11.gira.security.jwt.JwtUtils;
 
@@ -31,15 +32,18 @@ public class AuthController {
 	public ResponseEntity<Object> login(@Valid @RequestBody LoginDto dto, BindingResult errors){
 		Authentication authentication = null;
 		try {
-			authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
+			// authenticate
+			authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(dto.getUsername(),dto.getPassword()));
 			
+			// set authentication into SecurityContext
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			String jwtToken = jwtUtils.generateJwtToken(authentication);
-			return ResponseHandler.getResponse(jwtToken, HttpStatus.OK);
+			return ResponseHandler.getResponse(new JwtDto().jwt(jwtToken), HttpStatus.OK);
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
 		}
 		
-		return ResponseHandler.getResponse("Username or Password is invalid", HttpStatus.BAD_REQUEST);
+		return ResponseHandler.getResponse("Username or password is invalid.", HttpStatus.BAD_REQUEST);
 	}
 }

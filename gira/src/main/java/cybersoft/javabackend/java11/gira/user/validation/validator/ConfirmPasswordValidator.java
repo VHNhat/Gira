@@ -21,32 +21,20 @@ public class ConfirmPasswordValidator implements ConstraintValidator<ConfirmPass
 	}
 
 	@Override
-	public boolean isValid(Object value, ConstraintValidatorContext context) {
+	public boolean isValid(Object target, ConstraintValidatorContext context) {
 		try {
-			String password = (String)value.getClass().getMethod(getPassword).invoke(value);
-			String connfirmPassword = (String)value.getClass().getMethod(getConfirmPassword).invoke(value);
+			String password = (String)target.getClass().getMethod(getPassword).invoke(target);
+			String confirmPassword = (String)target.getClass().getMethod(getConfirmPassword).invoke(target);
 			
-			if(password.equals(connfirmPassword))
+			if(password.equals(confirmPassword))
 				return true;
 			
 			context.buildConstraintViolationWithTemplate(message)
-				   .addConstraintViolation()
-				   .disableDefaultConstraintViolation();
+				.addConstraintViolation()
+				.disableDefaultConstraintViolation();
 			
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e) {
 			e.printStackTrace();
 		}
 		
