@@ -1,11 +1,39 @@
 package cybersoft.javabackend.java11.gira.project.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
-public class ProjectType {
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+import cybersoft.javabackend.java11.gira.commondata.model.AbstractEntity;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Table(name = "gira_project_type")
+@Getter
+@Setter
+public class ProjectType extends AbstractEntity {
+	@NotBlank(message = "{project-type.name.not-blank}")
+	@Size(min = 3, max = 100, message = "{project-type.name.size}")
+	@Column(unique = true)
 	private String name;
+	
+	@NotBlank(message = "{project-type.code.not-blank}")
+	@Size(min = 3, max = 10, message = "{project-type.code.size}")
+	@Column(unique = true)
 	private String code;
+	
+	@NotBlank(message = "{project-type.description.not-blank}")
 	private String description;
-	private Set<Project> projects;
-	private Set<Workflow> workflow;
+	
+	@OneToMany(mappedBy = "projectType", cascade = CascadeType.ALL)
+	private Set<Project> projects = new HashSet<>();
+	//private Set<Workflow> workflow;
 }
