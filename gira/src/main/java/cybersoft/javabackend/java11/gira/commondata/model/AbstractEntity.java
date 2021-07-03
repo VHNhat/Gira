@@ -1,5 +1,6 @@
 package cybersoft.javabackend.java11.gira.commondata.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -24,7 +25,8 @@ import cybersoft.javabackend.java11.gira.util.DateUtils;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class AbstractEntity {
+public class AbstractEntity implements Serializable {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(updatable = false)
