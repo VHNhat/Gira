@@ -11,6 +11,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import cybersoft.javabackend.java11.gira.commondata.model.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +36,7 @@ public class ProjectType extends AbstractEntity {
 	private String description;
 	
 	@OneToMany(mappedBy = "projectType", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<Project> projects = new HashSet<>();
 	//private Set<Workflow> workflow;
 }

@@ -24,7 +24,6 @@ public class Workflow extends AbstractEntity {
 	@Size(min = 3, max = 100, message = "{workflow.name.size}")
 	private String name;	
 	
-	@NotBlank(message = "{workflow.description.not-blank}")
 	private String description;
 	
 	@OneToMany(mappedBy = "workflow", cascade = CascadeType.ALL, orphanRemoval = true)

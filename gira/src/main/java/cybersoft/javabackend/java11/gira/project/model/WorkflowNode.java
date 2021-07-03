@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import cybersoft.javabackend.java11.gira.commondata.model.AbstractEntity;
@@ -28,6 +29,7 @@ public class WorkflowNode extends AbstractEntity {
 	private int nodeOrder;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
+	@NotNull
 	private Workflow workflow;
 	
 	@OneToMany(mappedBy = "destination", cascade = CascadeType.ALL)
