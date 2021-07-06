@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/{project-id}/type")
+@RequestMapping("/api/project/type")
 public class ProjectTypeController {
 	private ProjectTypeService service;
 	
@@ -28,19 +28,21 @@ public class ProjectTypeController {
 	public ResponseEntity<Object> findAllProjectType(){
 		List<ProjectType> projectTypes = service.findAll();
 		
-		if(projectTypes.isEmpty()) {
-			return ResponseHandler.getResponse("There is no data", HttpStatus.OK);
-		}
+		if(projectTypes.isEmpty())
+			return ResponseHandler.getResponse("There is no data.", HttpStatus.OK);
+		
 		return ResponseHandler.getResponse(projectTypes, HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> addNewProjectType(@Valid @RequestBody ProjectType projectType, BindingResult bindingResult){
-		
+	public ResponseEntity<Object> addNewProjectType(@Valid @RequestBody ProjectType projectType,
+													BindingResult bindingResult){
 		if(bindingResult.hasErrors())
 			return ResponseHandler.getResponse(bindingResult, HttpStatus.BAD_REQUEST);
 		
 		ProjectType addedModel = service.save(projectType);
+		
 		return ResponseHandler.getResponse(addedModel, HttpStatus.OK);
 	}
+	
 }

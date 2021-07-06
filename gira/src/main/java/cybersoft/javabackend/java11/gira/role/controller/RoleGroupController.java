@@ -25,38 +25,66 @@ import cybersoft.javabackend.java11.gira.role.service.RoleGroupService;
 @RequestMapping("/api/role-group")
 public class RoleGroupController {
 	@Autowired
-	private RoleGroupService _service;
+	private RoleGroupService service;
 	
 	@GetMapping("")
 	public ResponseEntity<Object> findAllGroups(){
-		List<RoleGroup> roleGroups = _service.findAll();
+		List<RoleGroup> groups = service.findAll();
 		
-		if(roleGroups == null)
-			return new ResponseEntity<>(roleGroups, HttpStatus.NO_CONTENT);
+		if(groups.isEmpty())
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(groups, HttpStatus.OK);
+	}
+	
+	@GetMapping("/users")
+	public ResponseEntity<Object> findAllGroupsWithUsers(){
+		List<RoleGroup> groups = service.findAllWithUser();
 		
-		return new ResponseEntity<>(roleGroups, HttpStatus.OK);
+		if(groups.isEmpty())
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(groups, HttpStatus.OK);
+	}
+	
+	@GetMapping("/roles")
+	public ResponseEntity<Object> findAllGroupsWithRoles(){
+		List<RoleGroup> groups = service.findAllWithRoles();
+		
+		if(groups.isEmpty())
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(groups, HttpStatus.OK);
 	}
 	
 	@PostMapping("")
-	public ResponseEntity<Object> saveRoleGroup(@Valid @RequestBody CreateRoleGroupDto dto, BindingResult errors){
+	public ResponseEntity<Object> saveRoleGroup(@Valid @RequestBody CreateRoleGroupDto dto,
+												BindingResult errors){
 		if(errors.hasErrors())
-			return new ResponseEntity<>(errors.getAllErrors(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Object>(errors.getAllErrors(), HttpStatus.BAD_REQUEST);
 		
-		RoleGroup roleGroups = new RoleGroup()
-											  .name(dto.roleGroupName)
-											  .description(dto.description);
+		RoleGroup group = new RoleGroup()
+				.name(dto.groupName)
+				.description(dto.description);
 		
-		_service.save(roleGroups);
-		
-		return new ResponseEntity<>(roleGroups, HttpStatus.CREATED);
+		RoleGroup addedGroup = service.save(group);
+		return new ResponseEntity<Object>(addedGroup, HttpStatus.OK);
 	}
 	
 	@PutMapping("/{group-id}/role")
-	public ResponseEntity<Object> addRoleToGroup(@Valid @RequestBody Role role, @PathVariable("group-id") Long groupId, BindingResult errors){
+	public ResponseEntity<Object> addRoleToGroup(@Valid @RequestBody Role role,
+												@PathVariable("group-id") Long groupId,
+												BindingResult errors){
 		if(errors.hasErrors())
-			return new ResponseEntity<>(errors.getAllErrors(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Object>(errors.getAllErrors(), HttpStatus.BAD_REQUEST);
 		
-		RoleGroup updatedGroup = _service.addRole(role, groupId);
+		RoleGroup updatedGroup = service.addRole(role, groupId);
+		
+		return new ResponseEntity<>(updatedGroup, HttpStatus.OK);
+	}
+	
+	@PutMapping("/{group-id}/{username}")
+	public ResponseEntity<Object> addUserToGroup(@PathVariable("username") String username,
+												@PathVariable("group-id") Long groupId){
+		
+		RoleGroup updatedGroup = service.addUser(username, groupId);
 		
 		return new ResponseEntity<>(updatedGroup, HttpStatus.OK);
 	}
