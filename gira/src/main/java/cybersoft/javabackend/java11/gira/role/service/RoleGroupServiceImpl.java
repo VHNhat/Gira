@@ -11,50 +11,73 @@ import org.springframework.stereotype.Service;
 import cybersoft.javabackend.java11.gira.role.model.Role;
 import cybersoft.javabackend.java11.gira.role.model.RoleGroup;
 import cybersoft.javabackend.java11.gira.role.repository.RoleGroupRepository;
+import cybersoft.javabackend.java11.gira.user.model.User;
+import cybersoft.javabackend.java11.gira.user.repository.UserRepository;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 @Service
-public class RoleGroupServiceImpl implements RoleGroupService {
-	@Autowired
-	private RoleGroupRepository _repository;
+public class RoleGroupServiceImpl implements RoleGroupService{
+	private RoleGroupRepository repository;
+	private UserRepository userRepository;
+	
 	@Override
 	public List<RoleGroup> findAll() {
-		// TODO Auto-generated method stub
-		return _repository.findAll();
+		return repository.findAll();
 	}
 
 	@Override
 	public Optional<RoleGroup> findById(Long id) {
-		// TODO Auto-generated method stub
-		return _repository.findById(id);
+		return repository.findById(id);
 	}
 
 	@Override
 	public RoleGroup save(RoleGroup group) {
-		
-		return _repository.save(group);
+		return repository.save(group);
 	}
 
 	@Override
 	public RoleGroup update(RoleGroup group) {
-		// TODO Auto-generated method stub
-		return _repository.save(group);
+		return repository.save(group);
 	}
 
 	@Override
 	public void deleteById(Long id) {
-		// TODO Auto-generated method stub
-		_repository.deleteById(id);
+		repository.deleteById(id);
 	}
 
 	@Override
 	public RoleGroup addRole(@Valid Role role, Long groupId) {
-		RoleGroup group = _repository.getOne(groupId);
+		RoleGroup group = repository.getOne(groupId);
 		
 		group.addRole(role);
 		
-		return _repository.save(group);
+		return repository.save(group);
 	}
 
+	@Override
+	public List<RoleGroup> findAllWithUser() {
+		// TODO Auto-generated method stub
+		return repository.findAllWithUser();
+	}
 
+	@Override
+	public List<RoleGroup> findAllWithRoles() {
+		// TODO Auto-generated method stub
+		return repository.findAllWithRoles();
+	}
+
+	@Override
+	public RoleGroup addUser(String username, Long groupId) {
+		RoleGroup group = repository.getOne(groupId);
+		Optional<User> userOpt = userRepository.findByUsername(username);
+		
+		if(userOpt.isPresent()) {
+			group.getUsers().add(userOpt.get());
+			userOpt.get().getRoleGroups().add(group);
+		}
+		
+		return repository.save(group);
+	}
 
 }

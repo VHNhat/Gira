@@ -1,7 +1,5 @@
 package cybersoft.javabackend.java11.gira.user.model;
 
-
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,7 +26,6 @@ import cybersoft.javabackend.java11.gira.user.util.UserStatus;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Entity
 @Table(name = "gira_user")
 @Getter
@@ -39,11 +36,12 @@ public class User extends AbstractEntity {
 	@Column(unique = true, name = "username")
 	private String username;
 	
-	@NotBlank(message = "{user.password.not-blank}")
+	@NotBlank
 	private String password;
 	
 	@NotBlank
 	@Email
+	@Column(unique = true)
 	private String email;
 	
 	@NotBlank
@@ -63,14 +61,16 @@ public class User extends AbstractEntity {
 	private String department;
 	private String hobbies;
 	
-	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
-	@JsonIgnore
+	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+	//@JsonIgnore
 	private Set<RoleGroup> roleGroups = new HashSet<>();
 	
 	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<Project> ownProjects = new HashSet<>();
 	
 	@OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<Project> manageProjects = new HashSet<>();
 	
 	public User username(String username) {
