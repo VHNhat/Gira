@@ -61,7 +61,10 @@ public class User extends AbstractEntity {
 	private String department;
 	private String hobbies;
 	
-	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+	/*
+	 * Trong quan hệ many to many FetchType mặc định là Lazy
+	 */
+	@ManyToMany(mappedBy = "users")
 	//@JsonIgnore
 	private Set<RoleGroup> roleGroups = new HashSet<>();
 	

@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import ch.qos.logback.classic.Logger;
 
 @Component
 public class MapDtoToModel<E extends Object, T extends Object> {
