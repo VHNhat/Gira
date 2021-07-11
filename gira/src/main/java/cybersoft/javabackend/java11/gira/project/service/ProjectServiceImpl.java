@@ -1,10 +1,8 @@
 package cybersoft.javabackend.java11.gira.project.service;
 
+import java.util.List;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cybersoft.javabackend.java11.gira.commondata.GenericServiceImpl;
@@ -63,6 +61,13 @@ public class ProjectServiceImpl extends GenericServiceImpl<Project, Long> implem
 			project.setManager(managerOpt.get());
 		
 		return repository.save(project);
+	}
+	
+	@Override
+	public List<Project> findAllByType(Long typeId){
+		ProjectType type = projectTypeRepository.getOne(typeId);
+		
+		return repository.findAllByType(type);
 	}
 
 }

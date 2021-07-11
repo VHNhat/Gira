@@ -10,6 +10,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
@@ -22,6 +23,10 @@ import com.sun.istack.NotNull;
 import cybersoft.javabackend.java11.gira.commondata.model.AbstractEntity;
 import cybersoft.javabackend.java11.gira.project.model.Project;
 import cybersoft.javabackend.java11.gira.role.model.RoleGroup;
+import cybersoft.javabackend.java11.gira.task.model.Comment;
+import cybersoft.javabackend.java11.gira.task.model.Task;
+import cybersoft.javabackend.java11.gira.task.model.TaskHistory;
+import cybersoft.javabackend.java11.gira.task.model.Worklog;
 import cybersoft.javabackend.java11.gira.user.util.UserStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -61,7 +66,10 @@ public class User extends AbstractEntity {
 	private String department;
 	private String hobbies;
 	
-	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+	/*
+	 * Trong quan hệ many to many FetchType mặc định là Lazy
+	 */
+	@ManyToMany(mappedBy = "users")
 	//@JsonIgnore
 	private Set<RoleGroup> roleGroups = new HashSet<>();
 	
@@ -72,6 +80,34 @@ public class User extends AbstractEntity {
 	@OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Set<Project> manageProjects = new HashSet<>();
+	
+	@OneToMany(mappedBy = "createBy", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Set<Task> tasks = new HashSet<>();
+	
+	@OneToMany(mappedBy = "PIC", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Set<Task> picTasks = new HashSet<>();
+	
+	@OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Set<Task> reporterTasks = new HashSet<>();
+	
+	@ManyToMany(mappedBy = "watchers")
+	@JsonIgnore
+	private Set<Task> watcherTasks = new HashSet<>();
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Set<Comment> comments = new HashSet<>();
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Set<Worklog> worklogs = new HashSet<>();
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Set<TaskHistory> taskHistory = new HashSet<>();
 	
 	public User username(String username) {
 		this.username = username;

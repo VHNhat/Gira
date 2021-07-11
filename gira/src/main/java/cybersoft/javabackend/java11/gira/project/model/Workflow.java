@@ -1,5 +1,6 @@
 package cybersoft.javabackend.java11.gira.project.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import cybersoft.javabackend.java11.gira.commondata.model.AbstractEntity;
+import cybersoft.javabackend.java11.gira.task.model.Task;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,6 +35,9 @@ public class Workflow extends AbstractEntity {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Project project;
+	
+	@OneToMany(mappedBy = "status", cascade = CascadeType.ALL)
+	private Set<Task> tasks = new HashSet<>();
 	
 	public Workflow removeNode(WorkflowNode node) {
 		nodes.remove(node);

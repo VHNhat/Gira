@@ -2,6 +2,7 @@ package cybersoft.javabackend.java11.gira.project.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -21,6 +22,8 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import cybersoft.javabackend.java11.gira.commondata.model.AbstractEntity;
+import cybersoft.javabackend.java11.gira.task.model.Task;
+import cybersoft.javabackend.java11.gira.task.model.TaskType;
 import cybersoft.javabackend.java11.gira.user.model.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -83,4 +86,10 @@ public class Project extends AbstractEntity {
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
 	//@JsonIgnore
 	private List<Workflow> workflows = new ArrayList<>(); 
+	
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+	private List<Task> tasks = new LinkedList<>();
+	
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+	private List<TaskType> taskTypes = new LinkedList<>();
 }

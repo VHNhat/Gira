@@ -48,6 +48,16 @@ public class ProjectController {
 		return ResponseHandler.getResponse(projects, HttpStatus.OK);
 	}
 	
+	@GetMapping("/{type-id}")
+	public ResponseEntity<Object> findAllProjectByType(@PathVariable("type-id") Long typeId){
+		List<Project> projects = service.findAllByType(typeId);
+		
+		if(projects.isEmpty())
+			return ResponseHandler.getResponse("There is no data.", HttpStatus.OK);
+		
+		return ResponseHandler.getResponse(projects, HttpStatus.OK);
+	}
+	
 	@PostMapping("")
 	public ResponseEntity<Object> createNewProject(@Valid @RequestBody CreateProjectDto dto,
 												BindingResult bindingResult){
